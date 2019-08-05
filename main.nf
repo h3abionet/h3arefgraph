@@ -1,11 +1,11 @@
 #!/usr/bin/env nextflow
 /*
 ========================================================================================
-                         nf-core/microrefgraph
+                         h3abionet/h3arefgraph
 ========================================================================================
- nf-core/microrefgraph Analysis Pipeline.
+ h3abionet/h3arefgraph Analysis Pipeline.
  #### Homepage / Documentation
- https://github.com/nf-core/microrefgraph
+ https://github.com/h3abionet/h3arefgraph
 ----------------------------------------------------------------------------------------
 */
 
@@ -20,14 +20,14 @@ def helpMessage() {
         | \\| |       \\__, \\__/ |  \\ |___     \\`-._,-`-,
                                               `._,._,\'
 
-     nf-core/microrefgraph v${workflow.manifest.version}
+     h3abionet/h3arefgraph v${workflow.manifest.version}
     =======================================================
 
     Usage:
 
     The typical command for running the pipeline is as follows:
 
-    nextflow run nf-core/microrefgraph --reads '*_R{1,2}.fastq.gz' -profile docker
+    nextflow run h3abionet/h3arefgraph --reads '*_R{1,2}.fastq.gz' -profile docker
 
     Mandatory arguments:
       --reads                       Path to input data (must be surrounded with quotes)
@@ -131,10 +131,10 @@ log.info """=======================================================
     | \\| |       \\__, \\__/ |  \\ |___     \\`-._,-`-,
                                           `._,._,\'
 
-nf-core/microrefgraph v${workflow.manifest.version}"
+h3abionet/h3arefgraph v${workflow.manifest.version}"
 ======================================================="""
 def summary = [:]
-summary['Pipeline Name']  = 'nf-core/microrefgraph'
+summary['Pipeline Name']  = 'h3abionet/h3arefgraph'
 summary['Pipeline Version'] = workflow.manifest.version
 summary['Run Name']     = custom_runName ?: workflow.runName
 // TODO nf-core: Report custom parameters here
@@ -167,10 +167,10 @@ log.info "========================================="
 def create_workflow_summary(summary) {
     def yaml_file = workDir.resolve('workflow_summary_mqc.yaml')
     yaml_file.text  = """
-    id: 'nf-core-microrefgraph-summary'
+    id: 'nf-core-h3arefgraph-summary'
     description: " - this information is collected when the pipeline is started."
-    section_name: 'nf-core/microrefgraph Workflow Summary'
-    section_href: 'https://github.com/nf-core/microrefgraph'
+    section_name: 'h3abionet/h3arefgraph Workflow Summary'
+    section_href: 'https://github.com/h3abionet/h3arefgraph'
     plot_type: 'html'
     data: |
         <dl class=\"dl-horizontal\">
@@ -279,9 +279,9 @@ process output_documentation {
 workflow.onComplete {
 
     // Set up the e-mail variables
-    def subject = "[nf-core/microrefgraph] Successful: $workflow.runName"
+    def subject = "[h3abionet/h3arefgraph] Successful: $workflow.runName"
     if(!workflow.success){
-      subject = "[nf-core/microrefgraph] FAILED: $workflow.runName"
+      subject = "[h3abionet/h3arefgraph] FAILED: $workflow.runName"
     }
     def email_fields = [:]
     email_fields['version'] = workflow.manifest.version
@@ -329,11 +329,11 @@ workflow.onComplete {
           if( params.plaintext_email ){ throw GroovyException('Send plaintext e-mail, not HTML') }
           // Try to send HTML e-mail using sendmail
           [ 'sendmail', '-t' ].execute() << sendmail_html
-          log.info "[nf-core/microrefgraph] Sent summary e-mail to $params.email (sendmail)"
+          log.info "[h3abionet/h3arefgraph] Sent summary e-mail to $params.email (sendmail)"
         } catch (all) {
           // Catch failures and try with plaintext
           [ 'mail', '-s', subject, params.email ].execute() << email_txt
-          log.info "[nf-core/microrefgraph] Sent summary e-mail to $params.email (mail)"
+          log.info "[h3abionet/h3arefgraph] Sent summary e-mail to $params.email (mail)"
         }
     }
 
@@ -347,6 +347,6 @@ workflow.onComplete {
     def output_tf = new File( output_d, "pipeline_report.txt" )
     output_tf.withWriter { w -> w << email_txt }
 
-    log.info "[nf-core/microrefgraph] Pipeline Complete"
+    log.info "[h3abionet/h3arefgraph] Pipeline Complete"
 
 }

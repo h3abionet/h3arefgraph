@@ -1,6 +1,6 @@
-# nf-core/microrefgraph: Installation
+# h3abionet/h3arefgraph: Installation
 
-To start using the nf-core/microrefgraph pipeline, follow the steps below:
+To start using the h3abionet/h3arefgraph pipeline, follow the steps below:
 
 1. [Install Nextflow](#1-install-nextflow)
 2. [Install the pipeline](#2-install-the-pipeline)
@@ -34,17 +34,17 @@ See [nextflow.io](https://www.nextflow.io/) for further instructions on how to i
 ## 2) Install the pipeline
 
 #### 2.1) Automatic
-This pipeline itself needs no installation - NextFlow will automatically fetch it from GitHub if `nf-core/microrefgraph` is specified as the pipeline name.
+This pipeline itself needs no installation - NextFlow will automatically fetch it from GitHub if `h3abionet/h3arefgraph` is specified as the pipeline name.
 
 #### 2.2) Offline
 The above method requires an internet connection so that Nextflow can download the pipeline files. If you're running on a system that has no internet connection, you'll need to download and transfer the pipeline files manually:
 
 ```bash
-wget https://github.com/nf-core/microrefgraph/archive/master.zip
-mkdir -p ~/my-pipelines/nf-core/
-unzip master.zip -d ~/my-pipelines/nf-core/
+wget https://github.com/h3abionet/h3arefgraph/archive/master.zip
+mkdir -p ~/my-pipelines/h3abionet/
+unzip master.zip -d ~/my-pipelines/h3abionet/
 cd ~/my_data/
-nextflow run ~/my-pipelines/nf-core/microrefgraph-master
+nextflow run ~/my-pipelines/h3abionet/h3arefgraph-master
 ```
 
 To stop nextflow from looking for updates online, you can tell it to run in offline mode by specifying the following environment variable in your ~/.bashrc file:
@@ -74,7 +74,7 @@ Be warned of two important points about this default configuration:
 #### 3.1) Software deps: Docker
 First, install docker on your system: [Docker Installation Instructions](https://docs.docker.com/engine/installation/)
 
-Then, running the pipeline with the option `-profile docker` tells Nextflow to enable Docker for this run. An image containing all of the software requirements will be automatically fetched and used from dockerhub (https://hub.docker.com/r/nfcore/microrefgraph).
+Then, running the pipeline with the option `-profile docker` tells Nextflow to enable Docker for this run. An image containing all of the software requirements will be automatically fetched and used from dockerhub (https://hub.docker.com/r/nfcore/h3arefgraph).
 
 #### 3.1) Software deps: Singularity
 If you're not able to use Docker then [Singularity](http://singularity.lbl.gov/) is a great alternative.
@@ -83,13 +83,13 @@ The process is very similar: running the pipeline with the option `-profile sing
 If running offline with Singularity, you'll need to download and transfer the Singularity image first:
 
 ```bash
-singularity pull --name nf-core-microrefgraph.simg shub://nf-core/microrefgraph
+singularity pull --name nf-core-h3arefgraph.simg shub://h3abionet/h3arefgraph
 ```
 
 Once transferred, use `-with-singularity` and specify the path to the image file:
 
 ```bash
-nextflow run /path/to/nf-core-microrefgraph -with-singularity nf-core-microrefgraph.simg
+nextflow run /path/to/nf-core-h3arefgraph -with-singularity nf-core-h3arefgraph.simg
 ```
 
 Remember to pull updated versions of the singularity image if you update the pipeline.

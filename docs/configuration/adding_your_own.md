@@ -1,8 +1,8 @@
-# nf-core/microrefgraph: Configuration for other clusters
+# h3abionet/h3arefgraph: Configuration for other clusters
 
 It is entirely possible to run this pipeline on other clusters, though you will need to set up your own config file so that the pipeline knows how to work with your cluster.
 
-> If you think that there are other people using the pipeline who would benefit from your configuration (eg. other common cluster setups), please let us know. We can add a new configuration and profile which can used by specifying `-profile <name>` when running the pipeline. The config file will then be hosted at `nf-core/configs` and will be pulled automatically before the pipeline is executed.
+> If you think that there are other people using the pipeline who would benefit from your configuration (eg. other common cluster setups), please let us know. We can add a new configuration and profile which can used by specifying `-profile <name>` when running the pipeline. The config file will then be hosted at `h3abionet/configs` and will be pulled automatically before the pipeline is executed.
 
 If you are the only person to be running this pipeline, you can create your config file as `~/.nextflow/config` and it will be applied every time you run Nextflow. Alternatively, save the file anywhere and reference it when running the pipeline with `-c path/to/config` (see the [Nextflow documentation](https://www.nextflow.io/docs/latest/config.html) for more).
 
@@ -35,15 +35,15 @@ To run the pipeline, several software packages are required. How you satisfy the
 Please see the [`installation documentation`](../installation.md) for how to run using the below as a one-off. These instructions are about configuring a config file for repeated use.
 
 ### Docker
-Docker is a great way to run nf-core/microrefgraph, as it manages all software installations and allows the pipeline to be run in an identical software environment across a range of systems.
+Docker is a great way to run h3abionet/h3arefgraph, as it manages all software installations and allows the pipeline to be run in an identical software environment across a range of systems.
 
-Nextflow has [excellent integration](https://www.nextflow.io/docs/latest/docker.html) with Docker, and beyond installing the two tools, not much else is required - nextflow will automatically fetch the [nfcore/microrefgraph](https://hub.docker.com/r/nfcore/microrefgraph/) image that we have created and is hosted at dockerhub at run time.
+Nextflow has [excellent integration](https://www.nextflow.io/docs/latest/docker.html) with Docker, and beyond installing the two tools, not much else is required - nextflow will automatically fetch the [nfcore/h3arefgraph](https://hub.docker.com/r/nfcore/h3arefgraph/) image that we have created and is hosted at dockerhub at run time.
 
 To add docker support to your own config file, add the following:
 
 ```nextflow
 docker.enabled = true
-process.container = "nfcore/microrefgraph"
+process.container = "nfcore/h3arefgraph"
 ```
 
 Note that the dockerhub organisation name annoyingly can't have a hyphen, so is `nfcore` and not `nf-core`.
@@ -57,7 +57,7 @@ To specify singularity usage in your pipeline config file, add the following:
 
 ```nextflow
 singularity.enabled = true
-process.container = "shub://nf-core/microrefgraph"
+process.container = "shub://h3abionet/h3arefgraph"
 ```
 
 If you intend to run the pipeline offline, nextflow will not be able to automatically download the singularity image for you.
@@ -66,14 +66,14 @@ Instead, you'll have to do this yourself manually first, transfer the image file
 First, pull the image file where you have an internet connection:
 
 ```bash
-singularity pull --name nf-core-microrefgraph.simg shub://nf-core/microrefgraph
+singularity pull --name nf-core-h3arefgraph.simg shub://h3abionet/h3arefgraph
 ```
 
 Then transfer this file and point the config file to the image:
 
 ```nextflow
 singularity.enabled = true
-process.container = "/path/to/nf-core-microrefgraph.simg"
+process.container = "/path/to/nf-core-h3arefgraph.simg"
 ```
 
 

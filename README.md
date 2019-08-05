@@ -1,11 +1,11 @@
-# nf-core/h3arefgraph
+# h3abionet/h3arefgraph
 **RefGraph Workflows Hackathon**
 
-[![Build Status](https://travis-ci.org/nf-core/h3arefgraph.svg?branch=master)](https://travis-ci.org/nf-core/h3arefgraph)
+[![Build Status](https://travis-ci.org/h3abionet/h3arefgraph.svg?branch=master)](https://travis-ci.org/h3abionet/h3arefgraph)
 [![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A50.32.0-brightgreen.svg)](https://www.nextflow.io/)
 
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg)](http://bioconda.github.io/)
-[![Docker](https://img.shields.io/docker/automated/nfcore/microrefgraph.svg)](https://hub.docker.com/r/nfcore/h3arefgraph)
+[![Docker](https://img.shields.io/docker/automated/nfcore/h3arefgraph.svg)](https://hub.docker.com/r/nfcore/h3arefgraph)
 ![Singularity Container available](
 https://img.shields.io/badge/singularity-available-7E4C74.svg)
 
@@ -14,7 +14,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 
 
 ### Documentation
-The nf-core/microrefgraph pipeline comes with documentation about the pipeline, found in the `docs/` directory:
+The h3abionet/h3arefgraph pipeline comes with documentation about the pipeline, found in the `docs/` directory:
 
 1. [Installation](docs/installation.md)
 2. Pipeline configuration
@@ -28,4 +28,4 @@ The nf-core/microrefgraph pipeline comes with documentation about the pipeline, 
 <!-- TODO nf-core: Add a brief overview of what the pipeline does and how it works -->
 
 ### Credits
-nf-core/microrefgraph was originally written by RefGraph Team.
+h3abionet/h3arefgraph was originally written by the H3ABioNet RefGraph Team.
