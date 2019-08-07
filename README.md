@@ -10,6 +10,12 @@
 https://img.shields.io/badge/singularity-available-7E4C74.svg)
 
 ### Introduction
+This pipeline is for the use and testing of graph based methods for variant calling. 
+
+The aim is to allow the user to choose the reference graph construction method and the alignment / variant calling methods separately. 
+
+We also provide tools for reporting the results of the variant calling, that take advantage of the additional contextual information that using reference graphs provides. 
+
 The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It comes with docker / singularity containers making installation trivial and results highly reproducible.
 
 
