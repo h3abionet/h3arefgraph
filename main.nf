@@ -197,6 +197,7 @@ process get_software_versions {
     echo $workflow.nextflow.version > v_nextflow.txt
     fastqc --version > v_fastqc.txt
     multiqc --version > v_multiqc.txt
+    trim_galore --version > v_trimgalore.txt
     scrape_software_versions.py > software_versions_mqc.yaml
     """
 }
@@ -221,6 +222,37 @@ process fastqc {
     """
     fastqc -q $reads
     """
+}
+
+// TODO nf-core: Expose trim_galore vars, split for single/paired
+
+/*
+ * STEP 1a - Trimming
+ */
+process trimGalore {
+    tag "$name"
+    publishDir "${params.outdir}/trim_galore", mode: 'copy',
+        saveAs: {filename ->
+                if (filename.endsWith(".html")) "fastqc/$filename"
+                else if (filename.endsWith(".zip")) "fastqc/zip/$filename"
+                else if (filename.endsWith("trimming_report.txt")) "logs/$filename"
+                else if (filename.endsWith(".fq.gz")) "trimmed_reads/$filename"
+                else filename : null
+            }
+
+    input:
+    set val(name), file(reads) from read_files_trimming
+
+    output:
+    set val(name), file("*.fq.gz") into read_files_trimmed_reads
+        file "*.txt" into trimgalore_results_mqc
+        file "*.{zip,html}" into trimgalore_fastqc_reports_mqc
+
+    script:
+    """
+    trim_galore --paired --fastqc --gzip -q 20 ${name}_R1.fastq.gz ${name}_R2.fastq.gz
+    """
+
 }
 
 
