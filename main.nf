@@ -251,6 +251,40 @@ process multiqc {
     """
 }
 
+/*
+ * STEP 3 - Read trimming
+ */
+
+
+/*
+ * STEP 4 - Create reference genome graph
+ */
+
+
+/*
+ * STEP 5 - Read mapping and variant calling
+ */
+
+/*
+ * STEP 5.1 - Convert to appropriate format for tool
+ */
+
+ /*
+ * STEP 5.2 - Read mapping
+ */
+
+  /*
+ * STEP 5.3 - Variant calling
+ */
+
+
+ /*
+ * STEP 6 - Parse output
+ */
+
+ /*
+ * STEP 7 - Reporting
+ */
 
 
 /*
