@@ -202,6 +202,10 @@ process get_software_versions {
     // TODO nf-core: Get all tools to print their version number here
     """
     echo 'test get software versions' > v_pipeline.txt
+    echo 'test get software versions' > v_nextflow.txt
+    echo 'test get software versions' > v_fastqc.txt
+    echo 'test get software versions' > v_multiqc.txt
+
     #echo $workflow.manifest.version > v_pipeline.txt
     #echo $workflow.nextflow.version > v_nextflow.txt
     #fastqc --version > v_fastqc.txt
@@ -285,7 +289,7 @@ if(params.graph_generator == 'vg'){
         script:
 
         """
-        head $sample_name > mergedGenomes.txt
+        head $path > mergedGenomes.txt
         """
 
 
@@ -315,7 +319,7 @@ if(params.variant_calling == 'vg'){
         script:
 
         """
-        head referenceGenome > convertedRefGenomeFormat.graph
+        head $referenceGenome > convertedRefGenomeFormat.graph
         """
 
 
@@ -340,7 +344,7 @@ if(params.read_mapping == 'vg'){
         script:
 
         """
-        head convertedReferenceGenome > readMappingResult.txt
+        head $convertedReferenceGenome > readMappingResult.txt
         """
 
 
@@ -365,7 +369,7 @@ if(params.variant_calling == 'vg'){
         script:
 
         """
-        head mappedReads > variantGraph.var
+        head $mappedReads > variantGraph.var
         """
 
 
@@ -389,7 +393,7 @@ if(params.reporting == 'GenGraph'){
         script:
 
         """
-        head variantGraph > gg_format.gml
+        head $variantGraph > gg_format.gml
         """
 
 
@@ -413,7 +417,7 @@ if(params.reporting == 'GenGraph'){
         script:
 
         """
-        head formattedVariantGraph > report.txt
+        head $formattedVariantGraph > report.txt
         """
 
 
@@ -434,7 +438,10 @@ process output_documentation {
 
     script:
     """
-    markdown_to_html.r $output_docs results_description.html
+    #markdown_to_html.r $output_docs results_description.html
+
+    echo 'some output from output_documentation' > results_description.html
+
     """
 }
 
