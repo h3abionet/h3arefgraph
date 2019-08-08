@@ -18,6 +18,13 @@ We also provide tools for reporting the results of the variant calling, that tak
 
 The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It comes with docker / singularity containers making installation trivial and results highly reproducible.
 
+### Overview
+
+The aim of this project is to separate the different parts of the variant calling process to allow the development of 
+task specific tools. This is more in line with traditional variant calling where specific alignment tools may preform 
+better for different organisms, but should not require a different downstream analysis for each output. 
+
+![Overview slide](assets/images/Overview_slide.jpeg)
 
 ### Documentation
 The h3abionet/h3arefgraph pipeline comes with documentation about the pipeline, found in the `docs/` directory:
