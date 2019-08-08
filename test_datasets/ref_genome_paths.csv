@@ -1,4 +1,4 @@
-sample,path
-iso_1,./test_datasets/iso_1_test.fa
-iso_2,./test_datasets/iso_2_test.fa
-iso_3,./test_datasets/iso_3_test.fa
+sample,path,annotation
+iso_1,./test_datasets/iso_1_test.fa,NA
+iso_2,./test_datasets/iso_2_test.fa,NA
+iso_3,./test_datasets/iso_3_test.fa,NA
