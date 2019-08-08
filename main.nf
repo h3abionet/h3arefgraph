@@ -31,7 +31,6 @@ def helpMessage() {
 
     Mandatory arguments:
       --reads                       Path to input data (must be surrounded with quotes)
-      --genome                      Name of iGenomes reference
       -profile                      Configuration profile to use. Can use multiple (comma separated)
                                     Available: conda, docker, singularity, awsbatch, test and more.
 
@@ -39,9 +38,13 @@ def helpMessage() {
       --singleEnd                   Specifies that the input is single end reads
 
     References                      If not specified in the configuration file or you wish to overwrite any of the references.
-      --fasta                       Path to Fasta reference
+      --reference_genomes           A csv file containing the paths to the reference genome fasta files. Structure is: "isolate_name, path/to/.fa"
 
     Other options:
+      --graph_generator             Specify which tool to use for creating the reference graph
+      --read_alignment              Specify which tool to use for aligning reads to the reference graph
+      --variant_calling             Specify which tool to use for variant calling
+      --reporting                   Specify which tool to use for report generation
       --outdir                      The output directory where the results will be saved
       --email                       Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits
       -name                         Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic.
@@ -260,6 +263,33 @@ process multiqc {
  * STEP 4 - Create reference genome graph
  */
 
+// Parsing the fasta reference genome file.
+reference_genomes
+  .splitCsv(header:true)
+  .map{ row-> tuple(row.sample, file(row.path) }
+  .set { newFastaChannel }
+
+if(params.graph_generator == 'vg'){
+    process createGraphReference {
+        label 'high_memory'
+
+        input:
+          set sample_name, file(path) from newFastaChannel
+
+        output:
+          file "mergedGenomes.txt" into referenceGenome
+
+        script:
+
+        """
+        head $sample_name > mergedGenomes.txt
+        """
+
+
+    }
+}
+
+
 
 /*
  * STEP 5 - Read mapping and variant calling
@@ -269,23 +299,127 @@ process multiqc {
  * STEP 5.1 - Convert to appropriate format for tool
  */
 
+if(params.variant_calling == 'vg'){
+    process convertingToVGforMapping {
+        label 'high_memory'
+
+        input:
+          file referenceGenome
+          file reads
+
+        output:
+          file "readMappingResult.txt"
+
+        script:
+
+        """
+        head referenceGenome > readMappingResult.txt
+        """
+
+
+    }
+}
+
  /*
  * STEP 5.2 - Read mapping
  */
+
+if(params.read_mapping == 'vg'){
+    process mappingReads {
+        label 'high_memory'
+
+        input:
+          file referenceGenome
+          file reads
+
+        output:
+          file "readMappingResult.txt"
+
+        script:
+
+        """
+        head referenceGenome > readMappingResult.txt
+        """
+
+
+    }
+}
+
 
   /*
  * STEP 5.3 - Variant calling
  */
 
+if(params.variant_calling == 'vg'){
+    process variantCalling {
+        label 'high_memory'
+
+        input:
+          file referenceGenome
+          file reads
+
+        output:
+          file "readMappingResult.txt"
+
+        script:
+
+        """
+        head referenceGenome > readMappingResult.txt
+        """
+
+
+    }
+}
 
  /*
  * STEP 6 - Parse output
  */
 
+if(params.reporting == 'GenGraph'){
+    process convertingToGenGraphInput {
+        label 'high_memory'
+
+        input:
+          file referenceGenome
+          file reads
+
+        output:
+          file "readMappingResult.txt"
+
+        script:
+
+        """
+        head referenceGenome > readMappingResult.txt
+        """
+
+
+    }
+}
+
  /*
  * STEP 7 - Reporting
  */
 
+if(params.reporting == 'GenGraph'){
+    process generatingReport {
+        label 'high_memory'
+
+        input:
+          file referenceGenome
+          file reads
+
+        output:
+          file "readMappingResult.txt"
+
+        script:
+
+        """
+        head referenceGenome > readMappingResult.txt
+        """
+
+
+    }
+}
 
 /*
  * STEP 3 - Output Description HTML
