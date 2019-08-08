@@ -277,7 +277,7 @@ process multiqc {
 // Parsing the fasta reference genome file.
 
 if(params.graph_generator == 'vg'){
-    process createGraphReference {
+    process createGraphReference_vg {
         label 'high_memory'
 
         input:
@@ -296,6 +296,27 @@ if(params.graph_generator == 'vg'){
     }
 }
 
+// For GenGraph
+if(params.graph_generator == 'GenGraph'){
+    process createGraphReference_GenGraph {
+        label 'high_memory'
+
+        input:
+          set sample_name, file(path) from newFastaChannel
+
+        output:
+          file "mergedGenomes.txt" into referenceGenome
+
+        script:
+
+        """
+
+        python3 /GenGraph/gengraphTool.py -h > mergedGenomes.txt
+        """
+
+
+    }
+}
 
 
 /*
