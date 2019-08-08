@@ -67,11 +67,16 @@ if (params.help){
 
 // TODO nf-core: Add any reference files that are needed
 // Configurable reference genomes
-fasta = params.genome ? params.genomes[ params.genome ].fasta ?: false : false
-if ( params.fasta ){
-    fasta = file(params.fasta)
-    if( !fasta.exists() ) exit 1, "Fasta file not found: ${params.fasta}"
-}
+// Not sure that this dose, removed it for now :P
+//reference_genomes = params.reference_genomes ? params.reference_genomes[ params.reference_genomes ].csv ?: false : false
+
+// Creating ref genome path channel
+Channel.fromPath(params.reference_genomes)
+  .splitCsv(header:true)
+  .map{ row-> tuple(row.sample, file(row.path)) }
+  .set { newFastaChannel }
+
+
 //
 // NOTE - THIS IS NOT USED IN THIS PIPELINE, EXAMPLE ONLY
 // If you want to use the above in a process, define the following:
@@ -122,7 +127,7 @@ ch_output_docs = Channel.fromPath("$baseDir/docs/output.md")
      Channel
          .fromFilePairs( params.reads, size: params.singleEnd ? 1 : 2 )
          .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}\nNB: Path needs to be enclosed in quotes!\nIf this is single-end data, please specify --singleEnd on the command line." }
-         .into { read_files_fastqc; read_files_trimming }
+         .into { read_files_fastqc; read_files_trimming; reads }
  }
 
 
@@ -141,8 +146,8 @@ summary['Pipeline Name']  = 'h3abionet/h3arefgraph'
 summary['Pipeline Version'] = workflow.manifest.version
 summary['Run Name']     = custom_runName ?: workflow.runName
 // TODO nf-core: Report custom parameters here
-summary['Reads']        = params.reads
-summary['Fasta Ref']    = params.fasta
+//summary['Reads']        = params.reads
+//summary['Fasta Ref']    = params.fasta
 summary['Data Type']    = params.singleEnd ? 'Single-End' : 'Paired-End'
 summary['Max Memory']   = params.max_memory
 summary['Max CPUs']     = params.max_cpus
@@ -196,10 +201,11 @@ process get_software_versions {
     script:
     // TODO nf-core: Get all tools to print their version number here
     """
-    echo $workflow.manifest.version > v_pipeline.txt
-    echo $workflow.nextflow.version > v_nextflow.txt
-    fastqc --version > v_fastqc.txt
-    multiqc --version > v_multiqc.txt
+    echo 'test get software versions' > v_pipeline.txt
+    #echo $workflow.manifest.version > v_pipeline.txt
+    #echo $workflow.nextflow.version > v_nextflow.txt
+    #fastqc --version > v_fastqc.txt
+    #multiqc --version > v_multiqc.txt
     scrape_software_versions.py > software_versions_mqc.yaml
     """
 }
@@ -222,7 +228,8 @@ process fastqc {
 
     script:
     """
-    fastqc -q $reads
+    #fastqc -q $reads
+    echo 'done some qc' > look_qc_fastqc.html
     """
 }
 
@@ -264,10 +271,6 @@ process multiqc {
  */
 
 // Parsing the fasta reference genome file.
-reference_genomes
-  .splitCsv(header:true)
-  .map{ row-> tuple(row.sample, file(row.path) }
-  .set { newFastaChannel }
 
 if(params.graph_generator == 'vg'){
     process createGraphReference {
@@ -305,15 +308,14 @@ if(params.variant_calling == 'vg'){
 
         input:
           file referenceGenome
-          file reads
 
         output:
-          file "readMappingResult.txt"
+          file "convertedRefGenomeFormat.graph" into convertedReferenceGenome
 
         script:
 
         """
-        head referenceGenome > readMappingResult.txt
+        head referenceGenome > convertedRefGenomeFormat.graph
         """
 
 
@@ -329,16 +331,16 @@ if(params.read_mapping == 'vg'){
         label 'high_memory'
 
         input:
-          file referenceGenome
+          file convertedReferenceGenome
           file reads
 
         output:
-          file "readMappingResult.txt"
+          file "readMappingResult.txt" into mappedReads
 
         script:
 
         """
-        head referenceGenome > readMappingResult.txt
+        head convertedReferenceGenome > readMappingResult.txt
         """
 
 
@@ -355,16 +357,15 @@ if(params.variant_calling == 'vg'){
         label 'high_memory'
 
         input:
-          file referenceGenome
-          file reads
+          file mappedReads
 
         output:
-          file "readMappingResult.txt"
+          file "variantGraph.var" into variantGraph
 
         script:
 
         """
-        head referenceGenome > readMappingResult.txt
+        head mappedReads > variantGraph.var
         """
 
 
@@ -380,16 +381,15 @@ if(params.reporting == 'GenGraph'){
         label 'high_memory'
 
         input:
-          file referenceGenome
-          file reads
+          file variantGraph
 
         output:
-          file "readMappingResult.txt"
+          file "gg_format.gml" into formattedVariantGraph
 
         script:
 
         """
-        head referenceGenome > readMappingResult.txt
+        head variantGraph > gg_format.gml
         """
 
 
@@ -405,16 +405,15 @@ if(params.reporting == 'GenGraph'){
         label 'high_memory'
 
         input:
-          file referenceGenome
-          file reads
+          file formattedVariantGraph
 
         output:
-          file "readMappingResult.txt"
+          file "report.txt" into finalReportOutput
 
         script:
 
         """
-        head referenceGenome > readMappingResult.txt
+        head formattedVariantGraph > report.txt
         """
 
 

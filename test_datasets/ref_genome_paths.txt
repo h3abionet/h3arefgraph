@@ -1,4 +1,0 @@
-sample,path
-iso_1, /path/to/genome/iso_1.fa
-iso_2, /path/to/genome/iso_2.fa
-iso_3, /path/to/genome/iso_3.fa
