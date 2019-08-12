@@ -15,6 +15,11 @@
         * [`test`](#test)
     * [`--reads`](#--reads)
     * [`--singleEnd`](#--singleend)
+* [Trimming parameters](#Trimming-via-Trim_galore)
+    * [`--length`](#--length)
+    * [`--clip_R1/2`](#--clip_R1/2)
+    * [`--three_prime_clip_R1/2`](#--three_prime_clip_R1/2)
+    * [`--quality_trim`](#--quality_trim)
 * [Reference genomes](#reference-genomes)
     * [`--genome`](#--genome)
     * [`--fasta`](#--fasta)
@@ -128,6 +133,19 @@ By default, the pipeline expects paired-end data. If you have single-end data, y
 
 It is not possible to run a mixture of single-end and paired-end files in one run.
 
+## Trimming via Trim_galore
+
+Trimming of read (fastq) files done via the perl wrapper [Trim_galore](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/) for [cutadapt](https://cutadapt.readthedocs.io/en/stable/) and [fastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/).  
+By default, trimmed read files are compressed and fastQC performed on the files. The most common trimming parameters are exposed, described below.
+
+### `--length`  
+Integer which describes minimum length at which reads will be discarded.  Default = 18.  
+### `--clip_R1/2`
+Number of 5 prime bases to clip from forward or reverse reads. Default = No clipping.
+### `--three_prime_clip_R1/2`  
+Number of bases to clip from 3 prime. Default = No clipping.  
+### `--quality_trim`  
+Base quality trimming value. Default = 20.  
 
 ## Reference genomes
 
