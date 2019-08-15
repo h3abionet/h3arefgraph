@@ -9,6 +9,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/)
 and processes data using the following steps:
 
 * [FastQC](#fastqc) - read quality control
+* [Trim_galore](#Trim_galore) - read trimming
 * [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
 
 ## FastQC
@@ -25,6 +26,15 @@ For further reading and documentation see the [FastQC help](http://www.bioinform
 * `zips/sample_fastqc.zip`
   * zip file containing the FastQC report, tab-delimited data file and plot images
 
+## Trim_galore
+[Trim_galore](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/) is a wrapper script around cutadapt for read trimming and quality control with FastQC.
+
+**Output directory: `results/trim_galore`**
+
+* `fastqc/*_fastqc.html`
+  * FastQC report, containing quality metrics for your trimmed fastq files
+* `trimmed_reads/*_val_{1,2}.fq.gz`
+  * Compressed, trimmed read files
 
 ## MultiQC
 [MultiQC](http://multiqc.info) is a visualisation tool that generates a single HTML report summarising all samples in your project. Most of the pipeline QC results are visualised in the report and further statistics are available in within the report data directory.

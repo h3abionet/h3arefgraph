@@ -8,12 +8,16 @@ regexes = {
     'h3abionet/h3arefgraph': ['v_pipeline.txt', r"(\S+)"],
     'Nextflow': ['v_nextflow.txt', r"(\S+)"],
     'FastQC': ['v_fastqc.txt', r"FastQC v(\S+)"],
+    'Trim_Galore': ['v_trimgalore.txt', r"version(\S+)"],
+    'Cutadapt' : ['v_cutadapt.txt', r"(\S+)"],
     'MultiQC': ['v_multiqc.txt', r"multiqc, version (\S+)"],
 }
 results = OrderedDict()
 results['h3abionet/h3arefgraph'] = '<span style="color:#999999;\">N/A</span>'
 results['Nextflow'] = '<span style="color:#999999;\">N/A</span>'
 results['FastQC'] = '<span style="color:#999999;\">N/A</span>'
+results['Trim_Galore'] = '<span style="color:#999999;\">N/A</span>'
+results['Cutadapt'] = '<span style="color:#999999;\">N/A</span>'
 results['MultiQC'] = '<span style="color:#999999;\">N/A</span>'
 
 # Search each file using its regex

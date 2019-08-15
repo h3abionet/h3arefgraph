@@ -9,6 +9,17 @@
 ----------------------------------------------------------------------------------------
 */
 
+/*
+----------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
+Pipeline overview:
+- 1:  FastQC on raw sequence reads (fastq)
+- 2:  Adapter and read trimming with Trim_Galore!
+- 3:  FastQC on trimmed reads (Part of Trim_Galore output)
+- ?:  Overview of QC with MultiQC
+----------------------------------------------------------------------------------------
+*/
+
 
 def helpMessage() {
     // TODO nf-core: Add to this help message with new command line parameters
@@ -41,6 +52,14 @@ def helpMessage() {
     References                      If not specified in the configuration file or you wish to overwrite any of the references.
       --fasta                       Path to Fasta reference
 
+    Trimming options
+      --length [int]                Discard reads that became shorter than length [int] because of either quality or adapter trimming. Default: 18
+      --clip_R1 [int]               Instructs Trim Galore to remove [int] bp from the 5' end of read 1 (or single-end reads)
+      --clip_R2 [int]               Instructs Trim Galore to remove [int] bp from the 5' end of read 2 (paired-end reads only)
+      --three_prime_clip_R1 [int]   Instructs Trim Galore to remove [int] bp from the 3' end of read 1 AFTER adapter/quality trimming has been performed
+      --three_prime_clip_R2 [int]   Instructs Trim Galore to remove [int] bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed
+      --quality_trim [int]          Instructs Trim Galore to trim bases lower than [int]
+
     Other options:
       --outdir                      The output directory where the results will be saved
       --email                       Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits
@@ -49,7 +68,8 @@ def helpMessage() {
     AWSBatch options:
       --awsqueue                    The AWSBatch JobQueue that needs to be set when running on AWSBatch
       --awsregion                   The AWS Region for your AWS Batch job to run on
-    """.stripIndent()
+    """
+    .stripIndent()
 }
 
 /*
@@ -61,6 +81,17 @@ if (params.help){
     helpMessage()
     exit 0
 }
+
+// Configuration variables
+params.name = "microrefgraph"
+
+// Custom trimming options
+params.clip_R1 = 0
+params.clip_R2 = 0
+params.three_prime_clip_R1 = 0
+params.three_prime_clip_R2 = 0
+params.qtrim = 20
+params.length = 18
 
 // TODO nf-core: Add any reference files that are needed
 // Configurable reference genomes
@@ -146,6 +177,13 @@ summary['Max CPUs']     = params.max_cpus
 summary['Max Time']     = params.max_time
 summary['Output dir']   = params.outdir
 summary['Working dir']  = workflow.workDir
+//trimming
+summary['Trim R1'] = params.clip_R1
+summary['Trim R2'] = params.clip_R2
+summary["Trim 3' R1"] = params.three_prime_clip_R1
+summary["Trim 3' R2"] = params.three_prime_clip_R2
+summary["Quality Trim"] = params.qtrim
+summary["Trim Length"] = params.length
 summary['Container Engine'] = workflow.containerEngine
 if(workflow.containerEngine) summary['Container'] = workflow.container
 summary['Current home']   = "$HOME"
@@ -197,6 +235,8 @@ process get_software_versions {
     echo $workflow.nextflow.version > v_nextflow.txt
     fastqc --version > v_fastqc.txt
     multiqc --version > v_multiqc.txt
+    trim_galore --version | grep "version" | tr -d '[:space:]' > v_trimgalore.txt
+    cutadapt --version > v_cutadapt.txt
     scrape_software_versions.py > software_versions_mqc.yaml
     """
 }
@@ -223,10 +263,67 @@ process fastqc {
     """
 }
 
+// TODO nf-core: Expose trim_galore vars, split for single/paired
+
+/*
+ * STEP 2 - Trim_Galore
+ */
+process trimGalore {
+    tag "$name"
+    publishDir "${params.outdir}/trim_galore", mode: 'copy',
+        saveAs: {filename ->
+                if (filename.endsWith(".html")) "fastqc/$filename"
+                else if (filename.endsWith(".zip")) "fastqc/zip/$filename"
+                else if (filename.endsWith("trimming_report.txt")) "logs/$filename"
+                else if (filename.endsWith(".fq.gz")) "trimmed_reads/$filename"
+                else filename : null
+            }
+
+    input:
+    set val(name), file(reads) from read_files_trimming
+
+    output:
+    set val(name), file("*.fq.gz") into read_files_trimmed_reads
+        file "*.txt" into trimgalore_results_mqc
+        file "*.{zip,html}" into trimgalore_fastqc_reports_mqc
+
+    script:
+    c_R1 = params.clip_R1 > 0 ? "--clip_R1 $params.clip_R1" : ''
+    c_R2 = params.clip_R2 > 0 ? "--clip_R2 $params.clip_R2" : ''
+    tpc_R1 = params.three_prime_clip_R1 > 0 ? "--three_prime_clip_R1 $params.three_prime_clip_R1" : ''
+    tpc_R2 = params.three_prime_clip_R2 > 0 ? "--three_prime_clip_R2 $params.three_prime_clip_R2" : ''
+    qt = params.qtrim > 0 ? "-q $params.qtrim" : ''
+    if (params.singleEnd) {
+        """
+        trim_galore \
+                  --fastqc --gzip \
+                  $c_R1 \
+                  $c_R2 \
+                  $tpc_R1 \
+                  $tpc_R2 \
+                  $qt \
+                  --length $params.length \
+                  $reads
+        """
+    } else {
+        """
+        trim_galore \
+                  --paired --fastqc --gzip \
+                  $c_R1 \
+                  $c_R2 \
+                  $tpc_R1 \
+                  $tpc_R2 \
+                  $qt \
+                  --length $params.length \
+                  ${name}_R1.fastq.gz ${name}_R2.fastq.gz
+        """
+    }
+}
+
 
 
 /*
- * STEP 2 - MultiQC
+ * STEP 3 - MultiQC
  */
 process multiqc {
     publishDir "${params.outdir}/MultiQC", mode: 'copy'
@@ -234,6 +331,7 @@ process multiqc {
     input:
     file multiqc_config from ch_multiqc_config
     // TODO nf-core: Add in log files from your new processes for MultiQC to find!
+    file ('trim_galore/fastqc/*') from trimgalore_fastqc_reports_mqc.collect().ifEmpty([])
     file ('fastqc/*') from fastqc_results.collect().ifEmpty([])
     file ('software_versions/*') from software_versions_yaml
     file workflow_summary from create_workflow_summary(summary)
