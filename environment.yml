@@ -1,4 +1,4 @@
-name: nf-core-microrefgraph-1.0dev
+name: nf-core-h3arefgraph-1.0dev
 channels:
   - conda-forge
   - bioconda

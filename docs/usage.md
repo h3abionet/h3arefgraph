@@ -1,4 +1,4 @@
-# nf-core/microrefgraph: Usage
+# h3abionet/h3arefgraph: Usage
 
 ## Table of contents
 
@@ -57,7 +57,7 @@ NXF_OPTS='-Xms1g -Xmx4g'
 ## Running the pipeline
 The typical command for running the pipeline is as follows:
 ```bash
-nextflow run nf-core/microrefgraph --reads '*_R{1,2}.fastq.gz' -profile docker
+nextflow run h3abionet/h3arefgraph --reads '*_R{1,2}.fastq.gz' -profile docker
 ```
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
@@ -75,13 +75,13 @@ results         # Finished results (configurable, see below)
 When you run the above command, Nextflow automatically pulls the pipeline code from GitHub and stores it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:
 
 ```bash
-nextflow pull nf-core/microrefgraph
+nextflow pull h3abionet/h3arefgraph
 ```
 
 ### Reproducibility
 It's a good idea to specify a pipeline version when running the pipeline on your data. This ensures that a specific version of the pipeline code and software are used when you run your pipeline. If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.
 
-First, go to the [nf-core/microrefgraph releases page](https://github.com/nf-core/microrefgraph/releases) and find the latest version number - numeric only (eg. `1.3.1`). Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 1.3.1`.
+First, go to the [h3abionet/h3arefgraph releases page](https://github.com/h3abionet/h3arefgraph/releases) and find the latest version number - numeric only (eg. `1.3.1`). Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 1.3.1`.
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future.
 
@@ -100,7 +100,7 @@ If `-profile` is not specified at all the pipeline will be run locally and expec
     * Pulls most software from [Bioconda](https://bioconda.github.io/)
 * `docker`
     * A generic configuration profile to be used with [Docker](http://docker.com/)
-    * Pulls software from dockerhub: [`nfcore/microrefgraph`](http://hub.docker.com/r/nfcore/microrefgraph/)
+    * Pulls software from dockerhub: [`nfcore/h3arefgraph`](http://hub.docker.com/r/nfcore/h3arefgraph/)
 * `singularity`
     * A generic configuration profile to be used with [Singularity](http://singularity.lbl.gov/)
     * Pulls software from singularity-hub
@@ -199,9 +199,9 @@ Do not load `igenomes.config` when running the pipeline. You may choose this opt
 Each step in the pipeline has a default set of requirements for number of CPUs, memory and time. For most of the steps in the pipeline, if the job exits with an error code of `143` (exceeded requested resources) it will automatically resubmit with higher requests (2 x original, then 3 x original). If it still fails after three times then the pipeline is stopped.
 
 ### Custom resource requests
-Wherever process-specific requirements are set in the pipeline, the default value can be changed by creating a custom config file. See the files hosted at [`nf-core/configs`](https://github.com/nf-core/configs/tree/master/conf) for examples.
+Wherever process-specific requirements are set in the pipeline, the default value can be changed by creating a custom config file. See the files hosted at [`h3abionet/configs`](https://github.com/h3abionet/configs/tree/master/conf) for examples.
 
-If you are likely to be running `nf-core` pipelines regularly it may be a good idea to request that your custom config file is uploaded to the `nf-core/configs` git repository. Before you do this please can you test that the config file works with your pipeline of choice using the `-c` parameter (see definition below). You can then create a pull request to the `nf-core/configs` repository with the addition of your config file, associated documentation file (see examples in [`nf-core/configs/docs`](https://github.com/nf-core/configs/tree/master/docs)), and amending [`nfcore_custom.config`](https://github.com/nf-core/configs/blob/master/nfcore_custom.config) to include your custom profile.
+If you are likely to be running `nf-core` pipelines regularly it may be a good idea to request that your custom config file is uploaded to the `h3abionet/configs` git repository. Before you do this please can you test that the config file works with your pipeline of choice using the `-c` parameter (see definition below). You can then create a pull request to the `h3abionet/configs` repository with the addition of your config file, associated documentation file (see examples in [`h3abionet/configs/docs`](https://github.com/h3abionet/configs/tree/master/docs)), and amending [`nfcore_custom.config`](https://github.com/h3abionet/configs/blob/master/nfcore_custom.config) to include your custom profile.
 
 If you have any questions or issues please send us a message on [`Slack`](https://nf-core-invite.herokuapp.com/).
 
@@ -246,7 +246,7 @@ Specify the path to a specific config file (this is a core NextFlow command).
 Note - you can use this to override pipeline defaults.
 
 ### `--custom_config_version`
-Provide git commit id for custom Institutional configs hosted at `nf-core/configs`. This was implemented for reproducibility purposes. Default is set to `master`.
+Provide git commit id for custom Institutional configs hosted at `h3abionet/configs`. This was implemented for reproducibility purposes. Default is set to `master`.
 
 ```bash
 ## Download and use config file with following git commid id

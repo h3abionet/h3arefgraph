@@ -1,6 +1,6 @@
-# nf-core/microrefgraph: Documentation
+# h3abionet/h3arefgraph: Documentation
 
-The nf-core/microrefgraph documentation is split into the following files:
+The h3abionet/h3arefgraph documentation is split into the following files:
 
 1. [Installation](installation.md)
 2. Pipeline configuration

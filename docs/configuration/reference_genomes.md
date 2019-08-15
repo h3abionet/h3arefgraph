@@ -1,6 +1,6 @@
-# nf-core/microrefgraph: Reference Genomes Configuration
+# h3abionet/h3arefgraph: Reference Genomes Configuration
 
-The nf-core/microrefgraph pipeline needs a reference genome for alignment and annotation.
+The h3abionet/h3arefgraph pipeline needs a reference genome for alignment and annotation.
 
 These paths can be supplied on the command line at run time (see the [usage docs](../usage.md)),
 but for convenience it's often better to save these paths in a nextflow config file.

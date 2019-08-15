@@ -1,20 +1,20 @@
-# nf-core/microrefgraph: Local Configuration
+# h3abionet/h3arefgraph: Local Configuration
 
 If running the pipeline in a local environment, we highly recommend using either Docker or Singularity.
 
 ## Docker
-Docker is a great way to run `nf-core/microrefgraph`, as it manages all software installations and allows the pipeline to be run in an identical software environment across a range of systems.
+Docker is a great way to run `h3abionet/h3arefgraph`, as it manages all software installations and allows the pipeline to be run in an identical software environment across a range of systems.
 
-Nextflow has [excellent integration](https://www.nextflow.io/docs/latest/docker.html) with Docker, and beyond installing the two tools, not much else is required. The `nf-core/microrefgraph` profile comes with a configuration profile for docker, making it very easy to use. This also comes with the required presets to use the AWS iGenomes resource, meaning that if using common reference genomes you just specify the reference ID and it will be automatically downloaded from AWS S3.
+Nextflow has [excellent integration](https://www.nextflow.io/docs/latest/docker.html) with Docker, and beyond installing the two tools, not much else is required. The `h3abionet/h3arefgraph` profile comes with a configuration profile for docker, making it very easy to use. This also comes with the required presets to use the AWS iGenomes resource, meaning that if using common reference genomes you just specify the reference ID and it will be automatically downloaded from AWS S3.
 
 First, install docker on your system: [Docker Installation Instructions](https://docs.docker.com/engine/installation/)
 
 Then, simply run the analysis pipeline:
 ```bash
-nextflow run nf-core/microrefgraph -profile docker --genome '<genome ID>' --design '<path to your design file>'
+nextflow run h3abionet/h3arefgraph -profile docker --genome '<genome ID>' --design '<path to your design file>'
 ```
 
-Nextflow will recognise `nf-core/microrefgraph` and download the pipeline from GitHub. The `-profile docker` configuration lists the [nf-core/microrefgraph](https://hub.docker.com/r/nfcore/microrefgraph/) image that we have created and is hosted at dockerhub, and this is downloaded.
+Nextflow will recognise `h3abionet/h3arefgraph` and download the pipeline from GitHub. The `-profile docker` configuration lists the [h3abionet/h3arefgraph](https://hub.docker.com/r/nfcore/h3arefgraph/) image that we have created and is hosted at dockerhub, and this is downloaded.
 
 For more information about how to work with reference genomes, see [`docs/configuration/reference_genomes.md`](reference_genomes.md).
 
@@ -32,15 +32,15 @@ If you intend to run the pipeline offline, nextflow will not be able to automati
 First, pull the image file where you have an internet connection:
 
 > NB: The "tag" at the end of this command corresponds to the pipeline version.
-> Here, we're pulling the docker image for version 1.0 of the nf-core/microrefgraph pipeline
+> Here, we're pulling the docker image for version 1.0 of the h3abionet/h3arefgraph pipeline
 > Make sure that this tag corresponds to the version of the pipeline that you're using
 
 ```bash
-singularity pull --name nf-core-microrefgraph-1.0.img docker://nf-core/microrefgraph:1.0
+singularity pull --name nf-core-h3arefgraph-1.0.img docker://h3abionet/h3arefgraph:1.0
 ```
 
 Then transfer this file and run the pipeline with this path:
 
 ```bash
-nextflow run /path/to/nf-core-microrefgraph -with-singularity /path/to/nf-core-microrefgraph-1.0.img
+nextflow run /path/to/nf-core-h3arefgraph -with-singularity /path/to/nf-core-h3arefgraph-1.0.img
 ```

@@ -8,19 +8,20 @@ matrix:
   fast_finish: true
 
 before_install:
-  # PRs to master are only ok if coming from dev branch
+#  # PRs to master are only ok if coming from dev branch
   - '[ $TRAVIS_PULL_REQUEST = "false" ] || [ $TRAVIS_BRANCH != "master" ] || ([ $TRAVIS_PULL_REQUEST_SLUG = $TRAVIS_REPO_SLUG ] && [ $TRAVIS_PULL_REQUEST_BRANCH = "dev" ])'
   # Pull the docker image first so the test doesn't wait for this
-  - docker pull nfcore/microrefgraph:dev
+  - docker pull jambler24/h3arefgraph:dev
   # Fake the tag locally so that the pipeline runs properly
-  - docker tag nfcore/microrefgraph:dev nfcore/microrefgraph:latest
+  - docker tag jambler24/h3arefgraph:dev jambler24/h3arefgraph:latest
 
 install:
   # Install Nextflow
   - mkdir /tmp/nextflow && cd /tmp/nextflow
   - wget -qO- get.nextflow.io | bash
   - sudo ln -s /tmp/nextflow/nextflow /usr/local/bin/nextflow
-  # Install nf-core/tools
+  - sudo apt-get install libarchive-dev
+  # Install h3abionet/tools
   - pip install --upgrade pip
   - pip install nf-core
   # Reset
@@ -32,6 +33,7 @@ env:
 
 script:
   # Lint the pipeline code
-  - nf-core lint ${TRAVIS_BUILD_DIR}
+  #- nf-core lint ${TRAVIS_BUILD_DIR}
   # Run the pipeline with the test profile
-  - nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker
+  #- nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker
+  - ls
